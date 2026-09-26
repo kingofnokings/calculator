@@ -21,6 +21,10 @@ body {
 }
 
 .display {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
   width: 362px;
   height: 110px;
   background-color: seagreen;
@@ -45,6 +49,11 @@ body {
   color: white;
   border: solid crimson;
   background-color: crimson;
+}
+
+.display-operation {
+  margin-right: 10px;
+  font-size: 30px;
 }
 
 .buttons {
