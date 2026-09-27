@@ -1,5 +1,5 @@
 const add = function (num1, num2) {
-  if (Number.isInteger(num1) || Number.isInteger(num2)) {
+  if (Number.isFinite(num1) && Number.isFinite(num2)) {
     return num1 + num2;
   }
 
@@ -7,7 +7,7 @@ const add = function (num1, num2) {
 };
 
 const subtract = function (num1, num2) {
-  if (Number.isInteger(num1) || Number.isInteger(num2)) {
+  if (Number.isFinite(num1) && Number.isFinite(num2)) {
     return num1 - num2;
   }
 
@@ -15,7 +15,7 @@ const subtract = function (num1, num2) {
 };
 
 const multiply = function (num1, num2) {
-  if (Number.isInteger(num1) || Number.isInteger(num2)) {
+  if (Number.isFinite(num1) && Number.isFinite(num2)) {
     return num1 * num2;
   }
 
@@ -23,18 +23,22 @@ const multiply = function (num1, num2) {
 };
 
 const divide = function (num1, num2) {
-  if (Number.isInteger(num1) || Number.isInteger(num2)) {
+  if (num2 === 0) {
+    return "Impossible division by 0";
+  }
+  if (Number.isFinite(num1) && Number.isFinite(num2)) {
     return num1 / num2;
   }
 
   alert("Only numbers allowed!");
 };
 
-let var1 = 0;
-let operation = "";
-let var2 = 0;
+let var1 = "";
+let operation = null;
+let var2 = "";
+let resultDisplayed = false;
 
-const operate = function (var1, operation, var2) {
+const operate = function (var1, var2, operation) {
   if (operation === "+") {
     return add(var1, var2);
   }
@@ -47,13 +51,31 @@ const operate = function (var1, operation, var2) {
   if (operation === "/") {
     return divide(var1, var2);
   }
-  return 0;
+  return null;
+};
+
+const addDigit = function (digit) {
+  if (resultDisplayed) {
+    var1 = "";
+    var2 = "";
+    operation = null;
+    resultDisplayed = false;
+
+    displaOperation.textContent = "";
+  }
+  if (operation === null) {
+    var1 += digit;
+  } else {
+    var2 += digit;
+  }
+
+  displayCharacter(digit);
 };
 
 const displaOperation = document.querySelector(".display-operation");
 
 const displayCharacter = function (char) {
-  displaOperation.innerHTML = char;
+  displaOperation.textContent += char;
 };
 
 const one = document.querySelector(".one");
@@ -63,7 +85,7 @@ const four = document.querySelector(".four");
 const five = document.querySelector(".five");
 const six = document.querySelector(".six");
 const seven = document.querySelector(".seven");
-const eight = document.querySelector(".one");
+const eight = document.querySelector(".eight");
 const nine = document.querySelector(".nine");
 const zero = document.querySelector(".zero");
 const plus = document.querySelector(".plus");
@@ -75,59 +97,103 @@ const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear-button");
 
 one.addEventListener("click", () => {
-  displayCharacter("1");
+  addDigit("1");
 });
 
 two.addEventListener("click", () => {
-  displayCharacter("2");
+  addDigit("2");
 });
 
 three.addEventListener("click", () => {
-  displayCharacter("3");
+  addDigit("3");
 });
 
 four.addEventListener("click", () => {
-  displayCharacter("4");
+  addDigit("4");
 });
 
 five.addEventListener("click", () => {
-  displayCharacter("5");
+  addDigit("5");
 });
 
 six.addEventListener("click", () => {
-  displayCharacter("6");
+  addDigit("6");
 });
 
 seven.addEventListener("click", () => {
-  displayCharacter("7");
+  addDigit("7");
 });
 
 eight.addEventListener("click", () => {
-  displayCharacter("8");
+  addDigit("8");
 });
 
 nine.addEventListener("click", () => {
-  displayCharacter("9");
+  addDigit("9");
 });
 
 zero.addEventListener("click", () => {
-  displayCharacter("0");
+  addDigit("0");
 });
 
 plus.addEventListener("click", () => {
-  displayCharacter(" + ");
+  if (operation) {
+    const result = operate(Number(var1), Number(var2), operation);
+    displaOperation.textContent = "";
+    displayCharacter(result);
+    var1 = String(result);
+    var2 = "";
+    operation = "+";
+    displayCharacter(" + ");
+  } else {
+    operation = "+";
+    displayCharacter(" + ");
+  }
 });
 
 minus.addEventListener("click", () => {
-  displayCharacter(" - ");
+  if (operation) {
+    const result = operate(Number(var1), Number(var2), operation);
+    displaOperation.textContent = "";
+    displayCharacter(result);
+    var1 = String(result);
+    var2 = "";
+    operation = "-";
+    displayCharacter(" - ");
+  } else {
+    operation = "-";
+    displayCharacter(" - ");
+  }
 });
 
 times.addEventListener("click", () => {
-  displayCharacter(" × ");
+  if (operation) {
+    const result = operate(Number(var1), Number(var2), operation);
+    displaOperation.textContent = "";
+    displayCharacter(result);
+    var1 = String(result);
+    var2 = "";
+    operation = "*";
+    displayCharacter(" × ");
+  } else {
+    operation = "*";
+    displayCharacter(" × ");
+  }
 });
 
 divisor.addEventListener("click", () => {
-  displayCharacter(" ÷ ");
+  if (operation) {
+    const result = operate(Number(var1), Number(var2), operation);
+    displaOperation.textContent = "";
+    displayCharacter(result);
+    var1 = String(result);
+    var2 = "";
+    operation = "/";
+    displayCharacter(" ÷ ");
+  } else {
+    operation = "/";
+    displayCharacter(" ÷ ");
+  }
 });
 
 point.addEventListener("click", () => {
@@ -135,9 +201,19 @@ point.addEventListener("click", () => {
 });
 
 equals.addEventListener("click", () => {
-  displayCharacter(operate());
+  const result = operate(Number(var1), Number(var2), operation);
+  displaOperation.textContent = "";
+  displayCharacter(result);
+  var1 = String(result);
+  var2 = "";
+  operation = null;
+  resultDisplayed = true;
 });
 
 clear.addEventListener("click", () => {
-  displayCharacter("");
+  var1 = "";
+  var2 = "";
+  operation = null;
+  resultDisplayed = false;
+  displaOperation.textContent = "";
 });
